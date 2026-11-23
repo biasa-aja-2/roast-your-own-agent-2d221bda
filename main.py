@@ -30,6 +30,12 @@ def main():
     with open(path, "wb") as f:
         f.write(data)
     os.chmod(path, 0o644)
+    # Verify the write: re-read the file and confirm it holds exactly
+    # the roast, so a partial or failed write never ships silently.
+    with open(path, "rb") as f:
+        written = f.read()
+    assert written == data, "entry.txt does not match the roast"
+    print("roast (%d chars): %s" % (len(ROAST), ROAST))
 
 
 if __name__ == "__main__":
